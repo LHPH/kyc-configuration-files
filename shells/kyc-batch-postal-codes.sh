@@ -1,0 +1,1 @@
+java -Dspring.profiles.active=prod -Dspring.config.additional-location=/opt/kyc/kyc-config-files/,/opt/kyc/apps/kyc-batch-postal-codes/ -jar /opt/kyc/apps/kyc-batch-postal-codes/kyc-batch-postal-codes.jar
