@@ -1,0 +1,18 @@
+#Reference https://gist.github.com/danielperna84/98bced96581c92772014e4acfc7bde3f
+[Unit]
+Description=Vault Unseal
+After=vault.service
+Requires=vault.service
+PartOf=vault.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStartPre=/bin/sleep 10
+ExecStart=/bin/sh -c '/etc/vault.d/vault-unseal.sh'
+RemainAfterExit=false
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target vault.service
