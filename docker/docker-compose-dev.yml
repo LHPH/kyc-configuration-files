@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:14.20
+    shm_size: 128mb
+    container_name: postgres-14.20
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:4.2.2
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  redis:
+    image: redis:7.2-alphine
+    container_name: redis-standalone
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  mongodb:
+    image: mongodb/mongodb-community-server:8.0-ubi8
+    container_name: mongodb-6.0
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - mongodb_data:/data/db
+  vault:
+    image: hashicorp/vault:latest
+    container_name: Vault
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/data:/vault/data
+    ports:
+       - 8200:8200
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDRESS=http://0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    command: vault server -config=/vault/config/vault-dev-config.json
+
+
+volumes:
+  db_data:
+  rabbitmq_data:
+  redis_data:
+  mongodb_data:
